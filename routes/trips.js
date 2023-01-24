@@ -1,6 +1,7 @@
 var express = require("express");
 var router = express.Router();
 const Trip = require("../models/trips");
+const moment = require("moment");
 
 /* Post consultation d'un voyage. */
 router.post("/", function (req, res) {
@@ -11,8 +12,15 @@ router.post("/", function (req, res) {
       error: "Veuillez saisir l'un des champs !",
     });
   }
-  let mydate = new Date(date);
-  Trip.find({ departure, arrival, date: mydate }).then((data) => {
+
+  Trip.find({
+    departure,
+    arrival,
+    date: {
+      $gte: moment(date).startOf("day"),
+      $lte: moment(date).endOf("day"),
+    },
+  }).then((data) => {
     console.log(data);
     res.json({
       result: true,
