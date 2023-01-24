@@ -13,12 +13,15 @@ router.post("/", function (req, res) {
     });
   }
 
+  const startDate = moment(date).startOf("day").utc(date);
+  const endDate = moment(date).endOf("day").utc(date);
+
   Trip.find({
     departure,
     arrival,
     date: {
-      $gte: moment(date).startOf("day"),
-      $lte: moment(date).endOf("day"),
+      $gte: startDate,
+      $lte: endDate,
     },
   }).then((data) => {
     console.log(data);
