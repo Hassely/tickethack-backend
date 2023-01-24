@@ -11,7 +11,14 @@ router.post("/", function (req, res) {
       error: "Veuillez saisir l'un des champs !",
     });
   }
-  Trip.find({ departure, arrival, date }).then((res) => res.json);
+  let mydate = new Date(date);
+  Trip.find({ departure, arrival, date: mydate }).then((data) => {
+    console.log(data);
+    res.json({
+      result: true,
+      trips: data,
+    });
+  });
 });
 
 module.exports = router;
