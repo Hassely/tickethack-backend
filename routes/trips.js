@@ -16,8 +16,8 @@ router.post("/", function (req, res) {
   try {
     const startDate = new Date(date).setUTCHours(0, 0, 0);
     const endDate = new Date(date).setUTCHours(23, 59, 59, 59);
-
     // Todo : régler le problématique de la date invalide => crash serveur !tr
+
     Trip.find({
       departure,
       arrival,
@@ -33,6 +33,19 @@ router.post("/", function (req, res) {
         });
       } else return res.json({ result: true, trips: data });
     });
+  } catch (error) {
+    return res.json({
+      result: false,
+      error: "Une erreur est survenue !",
+    });
+  }
+});
+
+router.get("/:id", async (req, res) => {
+  try {
+    const searchedTrip = await Trip.findById(req.params.id);
+
+    return res.json({ result: true, trip: searchedTrip });
   } catch (error) {
     return res.json({
       result: false,
