@@ -7,28 +7,38 @@ const moment = require("moment");
 router.post("/", function (req, res) {
   const { departure, arrival, date } = req.body;
   if (!departure || !arrival || !date) {
-    res.json({
+    return res.json({
       result: false,
       error: "Veuillez saisir l'un des champs !",
     });
   }
 
-  const startDate = new Date(date).setUTCHours(0, 0, 0);
-  const endDate = new Date(date).setUTCHours(23, 59, 59, 59);
+  try {
+    const startDate = new Date(date).setUTCHours(0, 0, 0);
+    const endDate = new Date(date).setUTCHours(23, 59, 59, 59);
 
-  Trip.find({
-    departure,
-    arrival,
-    date: {
-      $gte: startDate,
-      $lte: endDate,
-    },
-  }).then((data) => {
-    res.json({
-      result: true,
-      trips: data,
+    // Todo : régler le problématique de la date invalide => crash serveur !
+    Trip.find({
+      departure,
+      arrival,
+      date: {
+        $gte: startDate,
+        $lte: endDate,
+      },
+    }).then((data) => {
+      if (data.length === 0) {
+        return res.json({
+          result: false,
+          error: "Aucune destination disponible pour cette date",
+        });
+      } else return res.json({ result: true, trips: data });
     });
-  });
+  } catch (error) {
+    return res.json({
+      result: false,
+      error: "Une erreur est survenue !",
+    });
+  }
 });
 
 module.exports = router;
