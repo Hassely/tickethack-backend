@@ -17,7 +17,7 @@ router.post("/", function (req, res) {
     const startDate = new Date(date).setUTCHours(0, 0, 0);
     const endDate = new Date(date).setUTCHours(23, 59, 59, 59);
 
-    // Todo : régler le problématique de la date invalide => crash serveur !
+    // Todo : régler le problématique de la date invalide => crash serveur !tr
     Trip.find({
       departure,
       arrival,
