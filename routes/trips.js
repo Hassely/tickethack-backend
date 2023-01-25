@@ -41,6 +41,7 @@ router.post("/", function (req, res) {
   }
 });
 
+// Sélection d'un voyage part ID
 router.get("/:id", async (req, res) => {
   try {
     const searchedTrip = await Trip.findById(req.params.id);
